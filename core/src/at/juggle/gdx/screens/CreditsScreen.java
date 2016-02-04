@@ -78,7 +78,7 @@ public class CreditsScreen extends ScreenAdapter {
     }
 
     private void handleInput() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY) || Gdx.input.justTouched()) {
             parentGame.getScreenManager().setCurrentState(ScreenManager.ScreenState.Menu);
         }
     }

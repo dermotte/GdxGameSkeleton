@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 
 import at.juggle.gdx.GdxGame;
 import at.juggle.gdx.ScreenManager;
@@ -67,6 +68,7 @@ public class MenuScreen extends ScreenAdapter {
     }
 
     private void handleInput() {
+        // keys ...
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             currentMenuItem = (currentMenuItem + 1) % menuStrings.length;
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
@@ -76,6 +78,27 @@ public class MenuScreen extends ScreenAdapter {
                 Gdx.app.exit();
             } else if (menuStrings[currentMenuItem].equals("Credits")) {
                 parentGame.getScreenManager().setCurrentState(ScreenManager.ScreenState.Credits);
+            }
+        }
+        // touch
+        if (Gdx.input.justTouched()) {
+            Vector3 touchWorldCoords = cam.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 1));
+            // find the menu item ..
+            for (int i = 0; i < menuStrings.length; i++) {
+                if (touchWorldCoords.x > offsetLeft) {
+                    float pos = GdxGame.GAME_HEIGHT - offsetTop - i * offsetY;
+                    if (touchWorldCoords.y < pos && touchWorldCoords.y > pos-menuFont.getLineHeight()) {
+                        // it's there
+                        if (menuStrings[i].equals("Exit")) {
+                            Gdx.app.exit();
+                        } else if (menuStrings[i].equals("Play")) {
+                            System.out.println("Play");
+                        } else if (menuStrings[i].equals("Credits")) {
+                            parentGame.getScreenManager().setCurrentState(ScreenManager.ScreenState.Credits);
+                        }
+                    }
+                }
+
             }
         }
     }

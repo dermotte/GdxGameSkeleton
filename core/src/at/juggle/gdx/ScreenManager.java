@@ -10,7 +10,7 @@ import at.juggle.gdx.screens.MenuScreen;
  * Created by Mathias Lux, mathias@juggle.at, on 04.02.2016.
  */
 public class ScreenManager {
-    public enum ScreenState {Loading, Menu, Game, Credits, GameOver};
+    public enum ScreenState {Loading, Menu, Game, Credits, Help, GameOver};
     private Screen currentScreen;
     private ScreenState currentState;
     private GdxGame parentGame;
