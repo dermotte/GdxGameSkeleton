@@ -15,26 +15,31 @@ import at.juggle.gdx.ScreenManager;
 /**
  * Created by Mathias Lux, mathias@juggle.at,  on 04.02.2016.
  */
-public class MenuScreen extends ScreenAdapter {
+public class CreditsScreen extends ScreenAdapter {
     private final SpriteBatch batch;
     private final OrthographicCamera cam;
     private GdxGame parentGame;
 
-    Texture backgroundImage;
-    BitmapFont menuFont;
+    Texture backgroundImage, gradientTop, gradientBottom;
+    BitmapFont creditsFont;
 
-    String[] menuStrings = {"Play", "Credits", "Exit"};
-    int currentMenuItem = 0;
+    String[] credits = ("GdxGameSkelet0n by Mathias Lux\n" +
+            "All assets are public d0main\n" +
+            "Cl0ne and adapt t0 y0ur will\n" +
+            "\n" +
+            "H0pe it helps ;)").split("\\n");
+    private float moveY;
 
-    float offsetLeft = GdxGame.GAME_WIDTH / 8, offsetTop = GdxGame.GAME_WIDTH / 8, offsetY = GdxGame.GAME_HEIGHT / 8;
 
-
-    public MenuScreen(GdxGame game) {
+    public CreditsScreen(GdxGame game) {
         this.parentGame = game;
 
         backgroundImage = parentGame.getAssetManager().get("menu/menu_background.jpg");
-        menuFont = parentGame.getAssetManager().get("menu/Ravie_72.fnt");
-        menuFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        gradientTop = parentGame.getAssetManager().get("credits/gradient_top.png");
+        gradientBottom = parentGame.getAssetManager().get("credits/gradient_bottom.png");
+
+        creditsFont = parentGame.getAssetManager().get("menu/Ravie_42.fnt");
+
         // Create camera that projects the game onto the actual screen size.
         cam = new OrthographicCamera(GdxGame.GAME_WIDTH, GdxGame.GAME_HEIGHT);
 
@@ -46,6 +51,7 @@ public class MenuScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        moveY += delta*100;
         handleInput();
         // camera:
         cam.update();
@@ -55,28 +61,25 @@ public class MenuScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        // draw bgImage ...
+        // draw bgImage
         batch.draw(backgroundImage, 0, 0, GdxGame.GAME_WIDTH, GdxGame.GAME_HEIGHT);
-        // draw Strings ...
-        for (int i = 0; i < menuStrings.length; i++) {
-            if (i == currentMenuItem) menuFont.setColor(0.2f, 1f, 0.2f, 1f);
-            else menuFont.setColor(0.2f, 0.2f, 1f, 1f);
-            menuFont.draw(batch, menuStrings[i], offsetLeft, GdxGame.GAME_HEIGHT - offsetTop - i * offsetY);
+
+        // draw moving text:
+        for (int i = 0; i < credits.length; i++) {
+            creditsFont.draw(batch, credits[i], GdxGame.GAME_WIDTH/8, moveY - i*creditsFont.getLineHeight()*1.5f);
         }
+
+
+        // draw gradient
+        batch.draw(gradientBottom, 0, 0, GdxGame.GAME_WIDTH, gradientBottom.getHeight());
+        batch.draw(gradientTop, 0, GdxGame.GAME_HEIGHT-gradientTop.getHeight(), GdxGame.GAME_WIDTH, gradientTop.getHeight());
+
         batch.end();
     }
 
     private void handleInput() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            currentMenuItem = (currentMenuItem + 1) % menuStrings.length;
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            currentMenuItem = (currentMenuItem - 1) % menuStrings.length;
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            if (menuStrings[currentMenuItem].equals("Exit")) {
-                Gdx.app.exit();
-            } else if (menuStrings[currentMenuItem].equals("Credits")) {
-                parentGame.getScreenManager().setCurrentState(ScreenManager.ScreenState.Credits);
-            }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
+            parentGame.getScreenManager().setCurrentState(ScreenManager.ScreenState.Menu);
         }
     }
 

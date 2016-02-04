@@ -2,6 +2,7 @@ package at.juggle.gdx;
 
 import com.badlogic.gdx.Screen;
 
+import at.juggle.gdx.screens.CreditsScreen;
 import at.juggle.gdx.screens.LoadingScreen;
 import at.juggle.gdx.screens.MenuScreen;
 
@@ -9,7 +10,7 @@ import at.juggle.gdx.screens.MenuScreen;
  * Created by Mathias Lux, mathias@juggle.at, on 04.02.2016.
  */
 public class ScreenManager {
-    public enum ScreenState {Loading, Menu, Game, GameOver};
+    public enum ScreenState {Loading, Menu, Game, Credits, GameOver};
     private Screen currentScreen;
     private ScreenState currentState;
     private GdxGame parentGame;
@@ -17,6 +18,7 @@ public class ScreenManager {
     public ScreenManager(GdxGame game) {
         this.parentGame = game;
         currentScreen = new LoadingScreen(game);
+        currentState = ScreenState.Loading;
     }
 
     public Screen getCurrentScreen() {
@@ -32,6 +34,8 @@ public class ScreenManager {
             currentState = state;
             if (state == ScreenState.Menu) {
                 currentScreen = new MenuScreen(parentGame);
+            } else if (state == ScreenState.Credits) {
+                currentScreen = new CreditsScreen(parentGame);
             }
         }
     }

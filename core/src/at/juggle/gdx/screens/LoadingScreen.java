@@ -27,6 +27,7 @@ public class LoadingScreen extends ScreenAdapter {
 
     public LoadingScreen(GdxGame game) {
         this.parentGame = game;
+        // this is the only asset not loaded by the AssetManager.
         loadingSheet = new Texture(Gdx.files.internal("loading/preloader_180x40.png"));
         loadingFrames = TextureRegion.split(loadingSheet, 180, 40)[0];
 

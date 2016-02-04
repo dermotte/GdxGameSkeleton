@@ -13,6 +13,8 @@ public class GdxGame extends ApplicationAdapter {
     AssetManager assMan;
     ScreenManager screenManager;
 
+    // gives the original size for all screen working with the scaling orthographic camera
+    // set in DesktopLauncher to any resolution and it will be scaled automatically.
     public static final int GAME_WIDTH = 1920;
     public static final int GAME_HEIGHT = 1080;
 
@@ -21,11 +23,16 @@ public class GdxGame extends ApplicationAdapter {
     public void create() {
         screenManager = new ScreenManager(this);
 
-        // LOAD ASSETS ...
+        // LOAD ASSETS HERE ...
+        // Loading screen will last until the last one is loaded.
         assMan = new AssetManager();
         // for the menu
         assMan.load("menu/Ravie_42.fnt", BitmapFont.class);
+        assMan.load("menu/Ravie_72.fnt", BitmapFont.class);
         assMan.load("menu/menu_background.jpg", Texture.class);
+        // for the credits
+        assMan.load("credits/gradient_top.png", Texture.class);
+        assMan.load("credits/gradient_bottom.png", Texture.class);
     }
 
     @Override
