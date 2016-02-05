@@ -3,15 +3,17 @@ package at.juggle.gdx;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class GdxGame extends ApplicationAdapter {
-    SpriteBatch batch;
-    AssetManager assMan;
-    ScreenManager screenManager;
+    private SpriteBatch batch;
+    private AssetManager assMan;
+    private ScreenManager screenManager;
+    private SoundManager soundManager;
 
     // gives the original size for all screen working with the scaling orthographic camera
     // set in DesktopLauncher to any resolution and it will be scaled automatically.
@@ -22,6 +24,7 @@ public class GdxGame extends ApplicationAdapter {
     @Override
     public void create() {
         screenManager = new ScreenManager(this);
+        soundManager = new SoundManager(this);
 
         // LOAD ASSETS HERE ...
         // Loading screen will last until the last one is loaded.
@@ -33,6 +36,15 @@ public class GdxGame extends ApplicationAdapter {
         // for the credits
         assMan.load("credits/gradient_top.png", Texture.class);
         assMan.load("credits/gradient_bottom.png", Texture.class);
+        // for the sounds
+        assMan.load("sfx/blip.wav", Sound.class);
+        assMan.load("sfx/explosion.wav", Sound.class);
+        assMan.load("sfx/hit.wav", Sound.class);
+        assMan.load("sfx/jump.wav", Sound.class);
+        assMan.load("sfx/laser.wav", Sound.class);
+        assMan.load("sfx/pickup.wav", Sound.class);
+        assMan.load("sfx/powerup.wav", Sound.class);
+
     }
 
     @Override
@@ -46,5 +58,9 @@ public class GdxGame extends ApplicationAdapter {
 
     public ScreenManager getScreenManager() {
         return screenManager;
+    }
+
+    public SoundManager getSoundManager() {
+        return soundManager;
     }
 }

@@ -71,11 +71,14 @@ public class MenuScreen extends ScreenAdapter {
         // keys ...
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             currentMenuItem = (currentMenuItem + 1) % menuStrings.length;
+            parentGame.getSoundManager().playEvent("blip");
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             currentMenuItem = (currentMenuItem - 1) % menuStrings.length;
+            parentGame.getSoundManager().playEvent("blip");
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             if (menuStrings[currentMenuItem].equals("Exit")) {
                 Gdx.app.exit();
+                parentGame.getSoundManager().playEvent("explode");
             } else if (menuStrings[currentMenuItem].equals("Credits")) {
                 parentGame.getScreenManager().setCurrentState(ScreenManager.ScreenState.Credits);
             }
