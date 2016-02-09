@@ -34,7 +34,9 @@ public class ScreenManager {
             currentState = state;
             if (state == ScreenState.Menu) {
                 currentScreen = new MenuScreen(parentGame);
+                parentGame.getSoundManager().startSong("main"); // starts the main theme.
             } else if (state == ScreenState.Credits) {
+                parentGame.getSoundManager().fadeOut(); // fade out music ...
                 currentScreen = new CreditsScreen(parentGame);
             }
         }

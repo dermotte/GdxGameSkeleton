@@ -37,18 +37,15 @@ public class GdxGame extends ApplicationAdapter {
         assMan.load("credits/gradient_top.png", Texture.class);
         assMan.load("credits/gradient_bottom.png", Texture.class);
         // for the sounds
-        assMan.load("sfx/blip.wav", Sound.class);
-        assMan.load("sfx/explosion.wav", Sound.class);
-        assMan.load("sfx/hit.wav", Sound.class);
-        assMan.load("sfx/jump.wav", Sound.class);
-        assMan.load("sfx/laser.wav", Sound.class);
-        assMan.load("sfx/pickup.wav", Sound.class);
-        assMan.load("sfx/powerup.wav", Sound.class);
+        soundManager.preload(assMan);
 
     }
 
     @Override
     public void render() {
+        // make sure the sound stays in sync.
+        soundManager.handle(Gdx.graphics.getDeltaTime());
+        // render the screen.
         screenManager.getCurrentScreen().render(Gdx.graphics.getDeltaTime());
     }
 

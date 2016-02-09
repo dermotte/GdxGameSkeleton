@@ -1,28 +1,35 @@
 package at.juggle.gdx;
 
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
 import java.util.HashMap;
+
+import at.juggle.gdx.sound.Song;
 
 /**
  * Created by Mathias Lux, mathias@juggle.at, 05.02.2016.
  */
 public class SoundManager {
+    enum MusicState {Running, FadeOut, FadeIn}
     private GdxGame parentGame;
     private HashMap<String, String> event2sound;
+    private HashMap<String, Song> name2song;
+
+    private Music currentMusic = null;
+    private Music nextMusic = null;
+
+    private Song currentSong = null;
+    private float currentVolume = 0.8f;
+    private float maxVolume = 0.8f;
+
+    private MusicState currentMusicState = MusicState.Running;
 
     public SoundManager(GdxGame parentGame) {
         this.parentGame = parentGame;
-
-        // register the available events.
         event2sound = new HashMap<String, String>(20);
-        event2sound.put("blip", "sfx/blip.wav");
-        event2sound.put("explode", "sfx/explosion.wav");
-        event2sound.put("hit", "sfx/hit.wav");
-        event2sound.put("jump", "sfx/jump.wav");
-        event2sound.put("laser", "sfx/laser.wav");
-        event2sound.put("pickup", "sfx/pickup.wav");
-        event2sound.put("powerup", "sfx/powerup.wav");
+        name2song = new HashMap<String, Song>(5);
     }
 
     /**
@@ -36,6 +43,137 @@ public class SoundManager {
             parentGame.getAssetManager().get(event2sound.get(event), Sound.class).play();
         } else {
             System.err.println("Event unknown.");
+        }
+    }
+
+    /**
+     * Tell sound manager here to pre-load everything. I't loaded in the loading screen and is available when the intro / menu starts.
+     * @param assMan
+     */
+    public void preload(AssetManager assMan) {
+        // sounds
+        loadSound(assMan, "sfx/blip.wav", "blip");
+        loadSound(assMan, "sfx/explosion.wav", "explode");
+        loadSound(assMan, "sfx/hit.wav", "hit");
+        loadSound(assMan, "sfx/jump.wav", "jump");
+        loadSound(assMan, "sfx/laser.wav", "laser");
+        loadSound(assMan, "sfx/pickup.wav", "pickup");
+        loadSound(assMan, "sfx/powerup.wav", "powerup");
+
+        // music
+        loadMusic(assMan, "music/main_intro.ogg");
+        loadMusic(assMan, "music/main_lvl1.ogg");
+        loadMusic(assMan, "music/main_lvl2.ogg");
+        name2song.put("main", new Song("music/main_intro.ogg", null, new String[]{"music/main_lvl1.ogg", "music/main_lvl2.ogg"}));
+    }
+
+    /**
+     * Starts a song registered under the given name.
+     * @param name
+     */
+    public void startSong(String name) {
+        // check if it is registered.
+        if (name2song.get(name) == null) {
+            System.err.println("Song not known.");
+            return;
+        }
+
+        // start intro and add main loop.
+        currentSong = name2song.get(name);
+        nextMusic = parentGame.getAssetManager().get(currentSong.getLevel()[0], Music.class);
+        nextMusic.setLooping(true);
+        currentSong.setCurrentLevel(0);
+        if (currentSong.getIntro() !=null) {
+            currentMusic = parentGame.getAssetManager().get(currentSong.getIntro(), Music.class);
+            currentMusic.setOnCompletionListener(new Music.OnCompletionListener() {
+                @Override
+                public void onCompletion(Music music) {
+                    currentMusic = nextMusic;
+                    nextMusic = null;
+                    currentMusic.setVolume(currentVolume);
+                    currentMusic.play();
+                }
+            });
+        } else {
+            // there is no intro, just start with the main loop.
+            currentMusic = nextMusic;
+            nextMusic = null;
+        }
+        currentMusic.setVolume(currentVolume);
+        currentMusic.play();
+    }
+
+    /**
+     * Moves levels up and down.
+     * @param increment 1 for next level, -1 for lower level.
+     */
+    public void addLevel(int increment) {
+        String[] level = currentSong.getLevel();
+        int newLevel = currentSong.getCurrentLevel() + increment;
+        if (level.length > newLevel && newLevel >= 0) { // check if it is a valid level ;)
+            currentSong.setCurrentLevel(newLevel);
+            nextMusic = parentGame.getAssetManager().get(level[newLevel]);
+            currentMusic.setLooping(false);
+            nextMusic.setLooping(true);
+            currentMusic.setOnCompletionListener(new Music.OnCompletionListener() {
+                @Override
+                public void onCompletion(Music music) {
+                    currentMusic = nextMusic;
+                    nextMusic = null;
+                    currentMusic.setVolume(currentVolume);
+                    currentMusic.play();
+                }
+            });
+        } else {
+            System.err.println("SoundManager: Level not supported " + newLevel);
+        }
+    }
+
+    /**
+     * Fades out current music.
+     */
+    public void fadeOut() {
+        currentMusicState = MusicState.FadeOut;
+    }
+
+    /**
+     * Helper to load music in one line.
+     * @param assMan
+     * @param path
+     */
+    private void loadMusic(AssetManager assMan, String path) {
+        assMan.load(path, Music.class);
+    }
+
+    /**
+     * Helper to load and register Event in one line.
+     * @param assMan
+     * @param path
+     * @param event
+     */
+    private void loadSound(AssetManager assMan, String path, String event) {
+        assMan.load(path, Sound.class);
+        event2sound.put(event, path);
+    }
+
+    /**
+     * Syncs to the game time, is called from the game to induce the current game time for fades, etc.
+     * @param deltaTime
+     */
+    public void handle(float deltaTime) {
+        if (currentMusicState == MusicState.FadeOut) {
+            float fadeTime = 3f; // seconds for the fade.
+            float step = maxVolume/fadeTime; // max volume divide by seconds time for the fade.
+            currentVolume -= deltaTime*step;
+            if (currentVolume <=0) { // stop fading.
+                currentMusicState = MusicState.Running;
+                currentMusic.stop();
+                currentMusic = null;
+                currentVolume = maxVolume;
+                nextMusic = null;
+            } else {
+                currentMusic.setVolume(currentVolume);
+            }
         }
     }
 }
