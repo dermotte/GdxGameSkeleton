@@ -4,6 +4,7 @@ import com.badlogic.gdx.Screen;
 
 import at.juggle.gdx.screens.CreditsScreen;
 import at.juggle.gdx.screens.DodgeDotGameScreen;
+import at.juggle.gdx.screens.GameOverScreen;
 import at.juggle.gdx.screens.LoadingScreen;
 import at.juggle.gdx.screens.MenuScreen;
 
@@ -40,6 +41,8 @@ public class ScreenManager {
                 parentGame.getSoundManager().startSong("main"); // starts the main theme.
             } else if (state == ScreenState.Game) {
                 currentScreen = new DodgeDotGameScreen(parentGame);
+            } else if (state == ScreenState.GameOver) {
+                currentScreen = new GameOverScreen(parentGame);
             } else if (state == ScreenState.Credits) {
                 parentGame.getSoundManager().fadeOut(); // fade out music ...
                 currentScreen = new CreditsScreen(parentGame);

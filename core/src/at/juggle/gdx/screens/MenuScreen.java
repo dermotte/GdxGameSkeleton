@@ -24,6 +24,7 @@ public class MenuScreen extends ScreenAdapter {
     Texture backgroundImage;
     BitmapFont menuFont;
 
+    // you can add strings here ...
     String[] menuStrings = {"Play", "Credits", "Exit"};
     int currentMenuItem = 0;
 
@@ -73,7 +74,8 @@ public class MenuScreen extends ScreenAdapter {
             currentMenuItem = (currentMenuItem + 1) % menuStrings.length;
             parentGame.getSoundManager().playEvent("blip");
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            currentMenuItem = (currentMenuItem - 1) % menuStrings.length;
+            if (currentMenuItem > 0) currentMenuItem = (currentMenuItem - 1);
+            else currentMenuItem = menuStrings.length-1;
             parentGame.getSoundManager().playEvent("blip");
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
             System.out.println("Next level in music ...");
@@ -103,7 +105,7 @@ public class MenuScreen extends ScreenAdapter {
                         if (menuStrings[i].equals("Exit")) {
                             Gdx.app.exit();
                         } else if (menuStrings[i].equals("Play")) {
-                            System.out.println("Play");
+                            parentGame.getScreenManager().setCurrentState(ScreenManager.ScreenState.Game);
                         } else if (menuStrings[i].equals("Credits")) {
                             parentGame.getScreenManager().setCurrentState(ScreenManager.ScreenState.Credits);
                         }

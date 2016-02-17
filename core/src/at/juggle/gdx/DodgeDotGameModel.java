@@ -25,7 +25,7 @@ public class DodgeDotGameModel {
     float gameTime = 0f;
     float gameOverTime = 0f;
     private boolean gameOver = false;
-    private long score = 0l;
+    public static long score = 0l;
 
     // for rendering:
     Texture mainDot, horizontalDot, verticalDot;
@@ -55,10 +55,19 @@ public class DodgeDotGameModel {
         verticalDot = parentGame.getAssetManager().get("game/dot_yellow.png", Texture.class);
         font = parentGame.getAssetManager().get("menu/Ravie_42.fnt", BitmapFont.class);
         this.parentGame = parentGame;
+        score = 0;
     }
 
     public void compute(float delta) {
         handleInput();
+        // check for crash ...
+        if (!gameOver && (vertDots[dotX][dotY] > 0 || horiDots[dotX][dotY] > 0)) {
+            // it's a crash!
+            gameOver = true;
+            gameOverTime = gameTime;
+            parentGame.getSoundManager().playEvent("explode");
+            parentGame.getSoundManager().fadeOut();
+        }
         // timing:
         gameTime += delta; // new time
         if (gameTime - lastTick < currentLevel.getTickTime()) { // return if not a tick!
@@ -98,14 +107,6 @@ public class DodgeDotGameModel {
                 }
             }
         }
-        // check if crash
-        if (vertDots[dotX][dotY] > 0 || horiDots[dotX][dotY] > 0) {
-            // it's a crash!
-            gameOver = true;
-            gameOverTime = gameTime;
-            parentGame.getSoundManager().playEvent("explode");
-            parentGame.getSoundManager().fadeOut();
-        }
 
         // spawn new dots:
         for (int y = 0; y < gridY; y++) {
@@ -138,7 +139,8 @@ public class DodgeDotGameModel {
             dotX %= gridX;
         } else {
             if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY) || Gdx.input.justTouched()) {
-                parentGame.getScreenManager().setCurrentState(ScreenManager.ScreenState.Menu);
+                if (gameTime-gameOverTime>2) // only if the explosion has been visible for at least 2 secs.
+                    parentGame.getScreenManager().setCurrentState(ScreenManager.ScreenState.GameOver);
             }
 
         }
