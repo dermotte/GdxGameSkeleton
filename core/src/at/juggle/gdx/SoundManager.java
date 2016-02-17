@@ -78,6 +78,11 @@ public class SoundManager {
             return;
         }
 
+        if (currentMusic != null) {
+            currentMusic.stop();
+            currentVolume = maxVolume;
+        }
+
         // start intro and add main loop.
         currentSong = name2song.get(name);
         nextMusic = parentGame.getAssetManager().get(currentSong.getLevel()[0], Music.class);
@@ -101,6 +106,7 @@ public class SoundManager {
         }
         currentMusic.setVolume(currentVolume);
         currentMusic.play();
+        currentMusicState = MusicState.Running;
     }
 
     /**
@@ -161,7 +167,7 @@ public class SoundManager {
      * @param deltaTime
      */
     public void handle(float deltaTime) {
-        if (currentMusicState == MusicState.FadeOut) {
+        if (currentMusic!= null && currentMusicState == MusicState.FadeOut) {
             float fadeTime = 3f; // seconds for the fade.
             float step = maxVolume/fadeTime; // max volume divide by seconds time for the fade.
             currentVolume -= deltaTime*step;

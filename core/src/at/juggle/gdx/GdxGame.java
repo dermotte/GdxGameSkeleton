@@ -38,7 +38,13 @@ public class GdxGame extends ApplicationAdapter {
         assMan.load("credits/gradient_bottom.png", Texture.class);
         // for the sounds
         soundManager.preload(assMan);
-
+        // for the actual game:
+        assMan.load("game/dot_green.png", Texture.class);
+        assMan.load("game/dot_back.png", Texture.class);
+        assMan.load("game/dot_green.png", Texture.class);
+        assMan.load("game/dot_yellow.png", Texture.class);
+        assMan.load("game/dot_light_orange.png", Texture.class);
+        assMan.load("game/dot_orange.png", Texture.class);
     }
 
     @Override

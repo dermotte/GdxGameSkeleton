@@ -85,6 +85,8 @@ public class MenuScreen extends ScreenAdapter {
             if (menuStrings[currentMenuItem].equals("Exit")) {
                 Gdx.app.exit();
                 parentGame.getSoundManager().playEvent("explode");
+            } else if (menuStrings[currentMenuItem].equals("Play")) {
+                parentGame.getScreenManager().setCurrentState(ScreenManager.ScreenState.Game);
             } else if (menuStrings[currentMenuItem].equals("Credits")) {
                 parentGame.getScreenManager().setCurrentState(ScreenManager.ScreenState.Credits);
             }
