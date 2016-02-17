@@ -39,9 +39,18 @@ public class DodgeDotGameModel {
     DodgeDotLevel[] levels = new DodgeDotLevel[]{
             new DodgeDotLevel(1f / 4f, 0.00f, 0.03f),
             new DodgeDotLevel(1f / 4f, 0.01f, 0.03f),
-            new DodgeDotLevel(1f / 4f, 0.02f, 0.05f),
-            new DodgeDotLevel(1f / 4f, 0.05f, 0.05f),
-            new DodgeDotLevel(1f / 5f, 0.05f, 0.05f),
+            new DodgeDotLevel(1f / 4f, 0.02f, 0.03f),
+            new DodgeDotLevel(1f / 4f, 0.03f, 0.03f),
+            new DodgeDotLevel(1f / 5f, 0.03f, 0.03f),
+            new DodgeDotLevel(1f / 5f, 0.03f, 0.04f),
+            new DodgeDotLevel(1f / 5f, 0.04f, 0.04f),
+            new DodgeDotLevel(1f / 6f, 0.04f, 0.04f),
+            new DodgeDotLevel(1f / 6f, 0.04f, 0.05f),
+            new DodgeDotLevel(1f / 6f, 0.05f, 0.05f),
+            new DodgeDotLevel(1f / 7f, 0.05f, 0.05f),
+            new DodgeDotLevel(1f / 8f, 0.05f, 0.05f),
+            new DodgeDotLevel(1f / 9f, 0.05f, 0.05f),
+            new DodgeDotLevel(1f / 10f, 0.05f, 0.05f),
     };
     int currentLevelIndex = 0;
     DodgeDotLevel currentLevel = levels[currentLevelIndex];
@@ -86,7 +95,10 @@ public class DodgeDotGameModel {
 
         // set Level ...
         currentLevelIndex = (int) Math.min(levels.length - 1, Math.floor(gameTime / 10));
-        currentLevel = levels[currentLevelIndex];
+        if (currentLevel != levels[currentLevelIndex]) {
+            parentGame.getSoundManager().playEvent("pickup");
+            currentLevel = levels[currentLevelIndex];
+        }
 
         // now let's move
         for (int x = gridX - 1; x >= 0; x--) {
