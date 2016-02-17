@@ -73,7 +73,8 @@ public class MenuScreen extends ScreenAdapter {
             currentMenuItem = (currentMenuItem + 1) % menuStrings.length;
             parentGame.getSoundManager().playEvent("blip");
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            currentMenuItem = (currentMenuItem - 1) % menuStrings.length;
+            if (currentMenuItem > 0) currentMenuItem = (currentMenuItem - 1);
+            else currentMenuItem = menuStrings.length-1;
             parentGame.getSoundManager().playEvent("blip");
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
             System.out.println("Next level in music ...");
