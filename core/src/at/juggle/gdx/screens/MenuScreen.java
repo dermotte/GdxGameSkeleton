@@ -7,11 +7,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
 import at.juggle.gdx.GdxGame;
 import at.juggle.gdx.ScreenManager;
+import at.juggle.gdx.animation.BackgroundAnimation;
 
 /**
  * Created by Mathias Lux, mathias@juggle.at,  on 04.02.2016.
@@ -20,7 +22,9 @@ public class MenuScreen extends ScreenAdapter {
     private final SpriteBatch batch;
     private final OrthographicCamera cam;
     private GdxGame parentGame;
+    private BackgroundAnimation animation;
 
+    Texture mainDot, horizontalDot, verticalDot;
     Texture backgroundImage;
     BitmapFont menuFont;
 
@@ -28,15 +32,23 @@ public class MenuScreen extends ScreenAdapter {
     String[] menuStrings = {"Play", "Credits", "Exit"};
     int currentMenuItem = 0;
 
-    float offsetLeft = GdxGame.GAME_WIDTH / 8, offsetTop = GdxGame.GAME_WIDTH / 8, offsetY = GdxGame.GAME_HEIGHT / 8;
+    // put it where we can see it :)
+    float offsetLeft = GdxGame.GAME_WIDTH / 8, offsetTop = GdxGame.GAME_WIDTH / 8, offsetY = GdxGame.GAME_HEIGHT / 6;
 
 
     public MenuScreen(GdxGame game) {
         this.parentGame = game;
+        animation = new BackgroundAnimation(game);
+        backgroundImage = parentGame.getAssetManager().get("menu/menu_background.jpg", Texture.class);
 
-        backgroundImage = parentGame.getAssetManager().get("menu/menu_background.jpg");
-        menuFont = parentGame.getAssetManager().get("menu/Ravie_72.fnt");
+        menuFont = parentGame.getAssetManager().get("menu/Homespun_112.fnt");
         menuFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
+        // for the animation ...
+        mainDot = parentGame.getAssetManager().get("game/dot_green.png", Texture.class);
+        horizontalDot = parentGame.getAssetManager().get("game/dot_orange.png", Texture.class);
+        verticalDot = parentGame.getAssetManager().get("game/dot_yellow.png", Texture.class);
+
         // Create camera that projects the game onto the actual screen size.
         cam = new OrthographicCamera(GdxGame.GAME_WIDTH, GdxGame.GAME_HEIGHT);
 
@@ -54,15 +66,22 @@ public class MenuScreen extends ScreenAdapter {
         batch.setProjectionMatrix(cam.combined);
 
 
-        Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1);
+        Gdx.gl.glClearColor(0.2431372f, 0.278431f, 0.3490196f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
+
+        // draw animation ...
+        animation.compute(delta);
+        animation.render(batch);
+
         // draw bgImage ...
+        batch.setColor(1f, 1f, 1f, 0.5f);
         batch.draw(backgroundImage, 0, 0, GdxGame.GAME_WIDTH, GdxGame.GAME_HEIGHT);
+
         // draw Strings ...
         for (int i = 0; i < menuStrings.length; i++) {
-            if (i == currentMenuItem) menuFont.setColor(0.2f, 1f, 0.2f, 1f);
-            else menuFont.setColor(0.2f, 0.2f, 1f, 1f);
+            if (i == currentMenuItem) menuFont.setColor(132f/255, 191f/255, 4f/255, 1f);
+            else  menuFont.setColor(192f/255, 131f/255, 4f/255, 1f);
             menuFont.draw(batch, menuStrings[i], offsetLeft, GdxGame.GAME_HEIGHT - offsetTop - i * offsetY);
         }
         batch.end();

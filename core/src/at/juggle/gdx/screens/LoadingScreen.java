@@ -56,7 +56,7 @@ public class LoadingScreen extends ScreenAdapter {
             animationFrameShownAlready = 0f;
         }
 
-        Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1);
+        Gdx.gl.glClearColor(0.2431372f, 0.278431f, 0.3490196f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         batch.draw(loadingFrames[animationFrame], GdxGame.GAME_WIDTH/2 - loadingFrames[animationFrame].getRegionWidth()/2, GdxGame.GAME_HEIGHT/2-loadingFrames[animationFrame].getRegionHeight()/2);

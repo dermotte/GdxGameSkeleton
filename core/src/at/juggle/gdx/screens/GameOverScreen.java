@@ -32,7 +32,7 @@ public class GameOverScreen extends ScreenAdapter {
     public GameOverScreen(GdxGame game) {
         this.parentGame = game;
 
-        font = parentGame.getAssetManager().get("menu/Ravie_72.fnt");
+        font = parentGame.getAssetManager().get("menu/Homespun_112.fnt");
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         // Create camera that projects the game onto the actual screen size.
         cam = new OrthographicCamera(GdxGame.GAME_WIDTH, GdxGame.GAME_HEIGHT);
@@ -57,10 +57,10 @@ public class GameOverScreen extends ScreenAdapter {
         if (scoreWidth < 1) {
             font.setColor(0f, 0f, 0f, 0f);
             gameOverWidth = font.draw(batch, "Game Over!", GdxGame.GAME_WIDTH / 8, 2* GdxGame.GAME_HEIGHT / 3 + font.getLineHeight() / 2).width;
-            scoreWidth = font.draw(batch, "scored " + DodgeDotGameModel.score + " points", GdxGame.GAME_WIDTH / 8, GdxGame.GAME_HEIGHT / 3 + font.getLineHeight() / 2).width;
+            scoreWidth = font.draw(batch, "You scored " + DodgeDotGameModel.score + " points.", GdxGame.GAME_WIDTH / 8, GdxGame.GAME_HEIGHT / 3 + font.getLineHeight() / 2).width;
         } else {
             font.draw(batch, "Game Over!", GdxGame.GAME_WIDTH / 2 - gameOverWidth / 2, 2* GdxGame.GAME_HEIGHT / 3 + font.getLineHeight() / 2);
-            font.draw(batch, "scored " + DodgeDotGameModel.score + " points", GdxGame.GAME_WIDTH / 2 - scoreWidth / 2, GdxGame.GAME_HEIGHT / 3 + font.getLineHeight() / 2);
+            font.draw(batch, "You scored " + DodgeDotGameModel.score + " points.", GdxGame.GAME_WIDTH / 2 - scoreWidth / 2, GdxGame.GAME_HEIGHT / 3 + font.getLineHeight() / 2);
         }
         batch.end();
     }

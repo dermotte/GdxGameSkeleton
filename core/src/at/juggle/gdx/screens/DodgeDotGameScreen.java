@@ -26,13 +26,13 @@ public class DodgeDotGameScreen extends ScreenAdapter {
     private DodgeDotGameModel model;
 
     public DodgeDotGameScreen(GdxGame parentGame) {
-        this.parentGame = parentGame;
-        model = new DodgeDotGameModel(parentGame);
-
         // init camera
         cam = new OrthographicCamera(GdxGame.GAME_WIDTH, GdxGame.GAME_HEIGHT);
         cam.position.set(cam.viewportWidth / 2f, cam.viewportHeight / 2f, 0);
         cam.update();
+
+        this.parentGame = parentGame;
+        model = new DodgeDotGameModel(parentGame, cam);
 
         // init batch
         batch = new SpriteBatch();

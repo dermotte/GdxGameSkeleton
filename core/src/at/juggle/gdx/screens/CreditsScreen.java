@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import at.juggle.gdx.GdxGame;
 import at.juggle.gdx.ScreenManager;
+import at.juggle.gdx.animation.BackgroundAnimation;
 
 /**
  * Created by Mathias Lux, mathias@juggle.at,  on 04.02.2016.
@@ -19,6 +20,7 @@ public class CreditsScreen extends ScreenAdapter {
     private final SpriteBatch batch;
     private final OrthographicCamera cam;
     private GdxGame parentGame;
+    private BackgroundAnimation animation;
 
     Texture backgroundImage, gradientTop, gradientBottom;
     BitmapFont creditsFont;
@@ -38,7 +40,7 @@ public class CreditsScreen extends ScreenAdapter {
         gradientTop = parentGame.getAssetManager().get("credits/gradient_top.png");
         gradientBottom = parentGame.getAssetManager().get("credits/gradient_bottom.png");
 
-        creditsFont = parentGame.getAssetManager().get("menu/Ravie_42.fnt");
+        creditsFont = parentGame.getAssetManager().get("menu/Homespun_72.fnt");
 
         // Create camera that projects the game onto the actual screen size.
         cam = new OrthographicCamera(GdxGame.GAME_WIDTH, GdxGame.GAME_HEIGHT);
@@ -47,6 +49,7 @@ public class CreditsScreen extends ScreenAdapter {
         cam.update();
 
         batch = new SpriteBatch();
+        animation = new BackgroundAnimation(game);
     }
 
     @Override
@@ -58,10 +61,14 @@ public class CreditsScreen extends ScreenAdapter {
         batch.setProjectionMatrix(cam.combined);
 
 
-        Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1);
+        Gdx.gl.glClearColor(0.2431372f, 0.278431f, 0.3490196f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
+        // animation
+        animation.compute(delta);
+        animation.render(batch);
         // draw bgImage
+        batch.setColor(1f, 1f, 1f, 0.5f);
         batch.draw(backgroundImage, 0, 0, GdxGame.GAME_WIDTH, GdxGame.GAME_HEIGHT);
 
         // draw moving text:
@@ -71,8 +78,8 @@ public class CreditsScreen extends ScreenAdapter {
 
 
         // draw gradient
-        batch.draw(gradientBottom, 0, 0, GdxGame.GAME_WIDTH, gradientBottom.getHeight());
-        batch.draw(gradientTop, 0, GdxGame.GAME_HEIGHT-gradientTop.getHeight(), GdxGame.GAME_WIDTH, gradientTop.getHeight());
+//        batch.draw(gradientBottom, 0, 0, GdxGame.GAME_WIDTH, gradientBottom.getHeight());
+//        batch.draw(gradientTop, 0, GdxGame.GAME_HEIGHT-gradientTop.getHeight(), GdxGame.GAME_WIDTH, gradientTop.getHeight());
 
         batch.end();
     }
