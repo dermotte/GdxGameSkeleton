@@ -46,6 +46,7 @@ public class GdxGame extends ApplicationAdapter {
         assMan.load("game/dot_yellow.png", Texture.class);
         assMan.load("game/dot_light_orange.png", Texture.class);
         assMan.load("game/dot_orange.png", Texture.class);
+        assMan.load("game/gamepad_400.png", Texture.class);
     }
 
     @Override

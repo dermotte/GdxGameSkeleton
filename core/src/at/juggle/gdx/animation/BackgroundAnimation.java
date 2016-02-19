@@ -87,10 +87,16 @@ public class BackgroundAnimation {
         for (int x = gridX - 1; x >= 0; x--) {
             for (int y = 0; y < gridY; y++) {
                 if (vertDots[x][y] > 0) { // paint the dot ...
-                    batch.draw(verticalDot, (x - 1) * dotSide, y * dotSide, dotSide * 2, dotSide);
+                    batch.draw(verticalDot, x * dotSide, y * dotSide, dotSide, dotSide);
+                    batch.setColor(1f, 1f, 1f, 0.33f);
+                    batch.draw(verticalDot, x * dotSide - dotSide / 2, y * dotSide, dotSide, dotSide);
+                    batch.setColor(1f, 1f, 1f, 1f);
                 }
                 if (horiDots[x][y] > 0) { // paint the dot ...
-                    batch.draw(horizontalDot, x * dotSide, (y - 1) * dotSide, dotSide, dotSide * 2);
+                    batch.draw(horizontalDot, x * dotSide, y * dotSide, dotSide, dotSide);
+                    batch.setColor(1f, 1f, 1f, 0.33f);
+                    batch.draw(horizontalDot, x * dotSide, y * dotSide - dotSide / 2, dotSide, dotSide);
+                    batch.setColor(1f, 1f, 1f, 1f);
                 }
             }
         }

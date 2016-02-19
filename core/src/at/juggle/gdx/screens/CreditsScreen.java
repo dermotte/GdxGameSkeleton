@@ -25,11 +25,14 @@ public class CreditsScreen extends ScreenAdapter {
     Texture backgroundImage, gradientTop, gradientBottom;
     BitmapFont creditsFont;
 
-    String[] credits = ("DodgeDots by Mathias Lux\n" +
-            "All assets are public d0main\n" +
-            "Cl0ne and adapt t0 y0ur will\n" +
+    String[] credits = ("DodgeDots\nby Mathias Lux\n" +
             "\n" +
-            "H0pe it helps ;)").split("\\n");
+            "All assets are public domain\n" +
+            "Source in Apache 2.0 license\n" +
+            "\n" +
+            "Implemented with libGDX" +
+            "\n" +
+            "Feel free to adapt.").split("\\n");
     private float moveY;
 
 
@@ -73,6 +76,7 @@ public class CreditsScreen extends ScreenAdapter {
 
         // draw moving text:
         for (int i = 0; i < credits.length; i++) {
+            creditsFont.setColor(242f / 255, 159f / 255, 5f / 255, 1f);
             creditsFont.draw(batch, credits[i], GdxGame.GAME_WIDTH/8, moveY - i*creditsFont.getLineHeight()*1.5f);
         }
 

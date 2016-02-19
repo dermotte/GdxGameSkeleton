@@ -64,7 +64,9 @@ public class SoundManager {
         loadMusic(assMan, "music/main_intro.ogg");
         loadMusic(assMan, "music/main_lvl1.ogg");
         loadMusic(assMan, "music/main_lvl2.ogg");
-        name2song.put("main", new Song("music/main_intro.ogg", null, new String[]{"music/main_lvl1.ogg", "music/main_lvl2.ogg"}));
+        loadMusic(assMan, "music/main_lvl3.ogg");
+        loadMusic(assMan, "music/main_lvl4.ogg");
+        name2song.put("main", new Song("music/main_intro.ogg", null, new String[]{"music/main_lvl1.ogg", "music/main_lvl2.ogg", "music/main_lvl3.ogg", "music/main_lvl4.ogg"}));
     }
 
     /**
