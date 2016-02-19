@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
@@ -26,11 +25,14 @@ public class MenuScreen extends ScreenAdapter {
 
     Texture mainDot, horizontalDot, verticalDot;
     Texture backgroundImage;
-    BitmapFont menuFont;
+    BitmapFont menuFont, smallFont;
 
     // you can add strings here ...
     String[] menuStrings = {"Play", "Credits", "Exit"};
     int currentMenuItem = 0;
+
+    String highScore = "";
+    float highScoreStringLength = 0;
 
     // put it where we can see it :)
     float offsetLeft = GdxGame.GAME_WIDTH / 8, offsetTop = GdxGame.GAME_WIDTH / 8, offsetY = GdxGame.GAME_HEIGHT / 6;
@@ -44,6 +46,10 @@ public class MenuScreen extends ScreenAdapter {
         menuFont = parentGame.getAssetManager().get("menu/Homespun_112.fnt");
         menuFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
+        smallFont = parentGame.getAssetManager().get("menu/Homespun_42.fnt");
+        smallFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
+
         // for the animation ...
         mainDot = parentGame.getAssetManager().get("game/dot_green.png", Texture.class);
         horizontalDot = parentGame.getAssetManager().get("game/dot_orange.png", Texture.class);
@@ -56,6 +62,14 @@ public class MenuScreen extends ScreenAdapter {
         cam.update();
 
         batch = new SpriteBatch();
+        if (Gdx.app.getPreferences("highscore") != null) {
+            int h = Gdx.app.getPreferences("highscore").getInteger("highscore", 0);
+            if (h > 0) {
+                highScore = "Highscore is " + h + " points";
+            }
+        }
+
+
     }
 
     @Override
@@ -80,9 +94,13 @@ public class MenuScreen extends ScreenAdapter {
 
         // draw Strings ...
         for (int i = 0; i < menuStrings.length; i++) {
-            if (i == currentMenuItem) menuFont.setColor(132f/255, 191f/255, 4f/255, 1f);
-            else  menuFont.setColor(192f/255, 131f/255, 4f/255, 1f);
+            if (i == currentMenuItem) menuFont.setColor(132f / 255, 191f / 255, 4f / 255, 1f);
+            else menuFont.setColor(192f / 255, 131f / 255, 4f / 255, 1f);
             menuFont.draw(batch, menuStrings[i], offsetLeft, GdxGame.GAME_HEIGHT - offsetTop - i * offsetY);
+        }
+        if (highScore.length() > 1) { // draw highscore if available.
+            smallFont.setColor(192f / 255, 131f / 255, 4f / 255, 1f);
+            highScoreStringLength = smallFont.draw(batch, highScore, GdxGame.GAME_WIDTH - offsetLeft - highScoreStringLength, GdxGame.GAME_HEIGHT - offsetTop - 0 * offsetY - (menuFont.getLineHeight()/2 - smallFont.getLineHeight()/2)).width;
         }
         batch.end();
     }
@@ -94,7 +112,7 @@ public class MenuScreen extends ScreenAdapter {
             parentGame.getSoundManager().playEvent("blip");
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             if (currentMenuItem > 0) currentMenuItem = (currentMenuItem - 1);
-            else currentMenuItem = menuStrings.length-1;
+            else currentMenuItem = menuStrings.length - 1;
             parentGame.getSoundManager().playEvent("blip");
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
             System.out.println("Next level in music ...");
@@ -119,7 +137,7 @@ public class MenuScreen extends ScreenAdapter {
             for (int i = 0; i < menuStrings.length; i++) {
                 if (touchWorldCoords.x > offsetLeft) {
                     float pos = GdxGame.GAME_HEIGHT - offsetTop - i * offsetY;
-                    if (touchWorldCoords.y < pos && touchWorldCoords.y > pos-menuFont.getLineHeight()) {
+                    if (touchWorldCoords.y < pos && touchWorldCoords.y > pos - menuFont.getLineHeight()) {
                         // it's there
                         if (menuStrings[i].equals("Exit")) {
                             Gdx.app.exit();

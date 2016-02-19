@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Sound;
 import java.util.HashMap;
 
 import at.juggle.gdx.sound.Song;
+import at.juggle.gdx.sound.SoundSync;
 
 /**
  * Created by Mathias Lux, mathias@juggle.at, 05.02.2016.
@@ -23,6 +24,7 @@ public class SoundManager {
     private Song currentSong = null;
     private float currentVolume = 0.8f;
     private float maxVolume = 0.8f;
+    private SoundSync soundSync = null;
 
     private MusicState currentMusicState = MusicState.Running;
 
@@ -99,6 +101,7 @@ public class SoundManager {
                     nextMusic = null;
                     currentMusic.setVolume(currentVolume);
                     currentMusic.play();
+                    if (soundSync != null) soundSync.sync();
                 }
             });
         } else {
@@ -108,6 +111,7 @@ public class SoundManager {
         }
         currentMusic.setVolume(currentVolume);
         currentMusic.play();
+        if (soundSync != null) soundSync.sync();
         currentMusicState = MusicState.Running;
     }
 
@@ -130,6 +134,7 @@ public class SoundManager {
                     nextMusic = null;
                     currentMusic.setVolume(currentVolume);
                     currentMusic.play();
+                    if (soundSync != null) soundSync.sync();
                 }
             });
         } else {
@@ -183,5 +188,9 @@ public class SoundManager {
                 currentMusic.setVolume(currentVolume);
             }
         }
+    }
+
+    public void setSoundSync(SoundSync soundSync) {
+        this.soundSync = soundSync;
     }
 }

@@ -22,7 +22,7 @@ public class BackgroundAnimation {
     // time:
     float lastTick = 0f;
     float gameTime = 0f;
-    float tickTime = 1f/3f;
+    float tickTime = 1f/2.1666666f;
     private boolean gameOver = false;
     public static long score = 0l;
 

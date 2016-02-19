@@ -38,9 +38,9 @@ public class ScreenManager {
             currentState = state;
             if (state == ScreenState.Menu) {
                 currentScreen = new MenuScreen(parentGame);
-                parentGame.getSoundManager().startSong("main"); // starts the main theme.
             } else if (state == ScreenState.Game) {
                 currentScreen = new DodgeDotGameScreen(parentGame);
+                parentGame.getSoundManager().startSong("main"); // starts the main theme.
             } else if (state == ScreenState.GameOver) {
                 currentScreen = new GameOverScreen(parentGame);
             } else if (state == ScreenState.Credits) {
