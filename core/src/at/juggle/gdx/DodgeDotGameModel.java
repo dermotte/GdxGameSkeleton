@@ -310,7 +310,7 @@ public class DodgeDotGameModel {
         font.draw(batch, glyphLayout, GdxGame.GAME_WIDTH - dotSide - glyphLayout.width, dotSide);
 
         // las but not least: draw the gamepad:
-        if (true || !Gdx.input.isPeripheralAvailable(Input.Peripheral.HardwareKeyboard)) {
+        if (!Gdx.input.isPeripheralAvailable(Input.Peripheral.HardwareKeyboard)) {
             batch.setColor(1f, 1f, 1f, .3f);
             batch.draw(gamepad, GdxGame.GAME_WIDTH - gamepad.getWidth() - dotSide, dotSide);
             batch.setColor(1f, 1f, 1f, 1f);
