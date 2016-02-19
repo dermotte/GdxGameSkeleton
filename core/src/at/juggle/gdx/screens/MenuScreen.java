@@ -94,7 +94,9 @@ public class MenuScreen extends ScreenAdapter {
 
         // draw Strings ...
         for (int i = 0; i < menuStrings.length; i++) {
-            if (i == currentMenuItem) menuFont.setColor(132f / 255, 191f / 255, 4f / 255, 1f);
+            if (i == currentMenuItem && Gdx.input.isPeripheralAvailable(Input.Peripheral.HardwareKeyboard)) {// show color on those with keyboard.
+                menuFont.setColor(132f / 255, 191f / 255, 4f / 255, 1f);
+            }
             else menuFont.setColor(192f / 255, 131f / 255, 4f / 255, 1f);
             menuFont.draw(batch, menuStrings[i], offsetLeft, GdxGame.GAME_HEIGHT - offsetTop - i * offsetY);
         }
