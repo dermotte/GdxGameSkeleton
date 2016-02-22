@@ -134,7 +134,6 @@ public class DodgeDotGameModel implements SoundSync {
             // it's a crash!
             gameOver = true;
             gameOverTime = gameTime;
-            parentGame.getSoundManager().addLevel(-1);
             parentGame.getSoundManager().playEvent("explode");
             parentGame.getSoundManager().fadeOut();
             xplodeMain.start();
@@ -146,7 +145,6 @@ public class DodgeDotGameModel implements SoundSync {
             // it's a crash!
             gameOver = true;
             gameOverTime = gameTime;
-            parentGame.getSoundManager().addLevel(-1);
             parentGame.getSoundManager().playEvent("explode");
             parentGame.getSoundManager().fadeOut();
             xplodeTwo.start();
