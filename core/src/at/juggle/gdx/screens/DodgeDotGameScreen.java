@@ -17,7 +17,7 @@ import at.juggle.gdx.GdxGame;
  * Created by mlux on 17.02.2016.
  *
  * Colors for the game: https://color.adobe.com/de/Graffiti-Tatendrang-Hell-color-theme-7603232/
- * 3E4759, 84BF04, F2E205, F29F05, F25C05
+ * 3E4759, 84BF04, F2E205, F29F05, F25C05 ... contrast to green: 8E04BF
  */
 public class DodgeDotGameScreen extends ScreenAdapter {
     GdxGame parentGame;

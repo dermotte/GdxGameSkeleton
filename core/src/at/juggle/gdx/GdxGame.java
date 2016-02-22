@@ -9,16 +9,22 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import at.juggle.gdx.animation.BackgroundAnimation;
+
 public class GdxGame extends ApplicationAdapter {
     private SpriteBatch batch;
     private AssetManager assMan;
     private ScreenManager screenManager;
     private SoundManager soundManager;
+    private BackgroundAnimation backgroundAnimation = null;
 
     // gives the original size for all screen working with the scaling orthographic camera
     // set in DesktopLauncher to any resolution and it will be scaled automatically.
     public static final int GAME_WIDTH = 1920;
     public static final int GAME_HEIGHT = 1080;
+
+    public static final String HIGHSCORE_FILE = "dodgedots_highscore";
+    public static final String OPTIONS_FILE = "dodgedots_options";
 
 
     @Override
@@ -41,6 +47,7 @@ public class GdxGame extends ApplicationAdapter {
         soundManager.preload(assMan);
         // for the actual game:
         assMan.load("game/dot_green.png", Texture.class);
+        assMan.load("game/dot_purple.png", Texture.class);
         assMan.load("game/dot_back.png", Texture.class);
         assMan.load("game/dot_green.png", Texture.class);
         assMan.load("game/dot_yellow.png", Texture.class);
@@ -67,5 +74,13 @@ public class GdxGame extends ApplicationAdapter {
 
     public SoundManager getSoundManager() {
         return soundManager;
+    }
+
+    public BackgroundAnimation getBackgroundAnimation() {
+        return backgroundAnimation;
+    }
+
+    public void setBackgroundAnimation(BackgroundAnimation backgroundAnimation) {
+        this.backgroundAnimation = backgroundAnimation;
     }
 }

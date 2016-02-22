@@ -1,5 +1,7 @@
 package at.juggle.gdx;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -13,6 +15,7 @@ import at.juggle.gdx.sound.SoundSync;
  * Created by Mathias Lux, mathias@juggle.at, 05.02.2016.
  */
 public class SoundManager {
+
     enum MusicState {Running, FadeOut, FadeIn}
     private GdxGame parentGame;
     private HashMap<String, String> event2sound;
@@ -22,16 +25,23 @@ public class SoundManager {
     private Music nextMusic = null;
 
     private Song currentSong = null;
-    private float currentVolume = 0.8f;
-    private float maxVolume = 0.8f;
+    private float currentVolume = 0.7f;
+    private float maxVolume = 0.7f;
     private SoundSync soundSync = null;
 
     private MusicState currentMusicState = MusicState.Running;
+
+    private boolean soundOn = true, musicOn = true;
+    private final Preferences gameOptions = Gdx.app.getPreferences(GdxGame.OPTIONS_FILE);
 
     public SoundManager(GdxGame parentGame) {
         this.parentGame = parentGame;
         event2sound = new HashMap<String, String>(20);
         name2song = new HashMap<String, Song>(5);
+        if (Gdx.app.getPreferences(GdxGame.OPTIONS_FILE) != null) {
+            soundOn = gameOptions.getBoolean("soundOn", true);
+            musicOn = gameOptions.getBoolean("musicOn", true);
+        }
     }
 
     /**
@@ -41,10 +51,12 @@ public class SoundManager {
      * @param event
      */
     public void playEvent(String event) {
-        if (event2sound.get(event) != null) {
-            parentGame.getAssetManager().get(event2sound.get(event), Sound.class).play();
-        } else {
-            System.err.println("Event unknown.");
+        if (soundOn) {
+            if (event2sound.get(event) != null) {
+                parentGame.getAssetManager().get(event2sound.get(event), Sound.class).play();
+            } else {
+                System.err.println("Event unknown.");
+            }
         }
     }
 
@@ -76,6 +88,7 @@ public class SoundManager {
      * @param name
      */
     public void startSong(String name) {
+        if (!musicOn) return;
         // check if it is registered.
         if (name2song.get(name) == null) {
             System.err.println("Song not known.");
@@ -120,6 +133,7 @@ public class SoundManager {
      * @param increment 1 for next level, -1 for lower level.
      */
     public void addLevel(int increment) {
+        if (!musicOn || currentSong == null) return;
         String[] level = currentSong.getLevel();
         int newLevel = currentSong.getCurrentLevel() + increment;
         if (level.length > newLevel && newLevel >= 0) { // check if it is a valid level ;)
@@ -188,6 +202,26 @@ public class SoundManager {
                 currentMusic.setVolume(currentVolume);
             }
         }
+    }
+
+    public boolean isSoundOn() {
+        return soundOn;
+    }
+
+    public void toggleSoundOn() {
+        soundOn = !soundOn;
+        gameOptions.putBoolean("soundOn", soundOn);
+        gameOptions.flush();
+    }
+
+    public boolean isMusicOn() {
+        return musicOn;
+    }
+
+    public void toggleMusicOn() {
+        musicOn = !musicOn;
+        gameOptions.putBoolean("musicOn", musicOn);
+        gameOptions.flush();
     }
 
     public void setSoundSync(SoundSync soundSync) {

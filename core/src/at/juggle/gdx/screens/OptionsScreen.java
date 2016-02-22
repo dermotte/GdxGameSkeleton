@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
-import at.juggle.gdx.DodgeDotGameModel;
 import at.juggle.gdx.GdxGame;
 import at.juggle.gdx.ScreenManager;
 import at.juggle.gdx.animation.BackgroundAnimation;
@@ -18,7 +17,7 @@ import at.juggle.gdx.animation.BackgroundAnimation;
 /**
  * Created by Mathias Lux, mathias@juggle.at,  on 04.02.2016.
  */
-public class MenuScreen extends ScreenAdapter {
+public class OptionsScreen extends ScreenAdapter {
     private final SpriteBatch batch;
     private final OrthographicCamera cam;
     private GdxGame parentGame;
@@ -29,19 +28,19 @@ public class MenuScreen extends ScreenAdapter {
     BitmapFont menuFont, smallFont;
 
     // you can add strings here ...
-    String[] menuStrings = {"Play", "Battle", "Options", "Credits"};//, "Exit"};
+    String[] menuStrings = {"Toogle music", "Toggle sound", "Delete highscore", "Back to menu"};//, "Exit"};
     int currentMenuItem = 0;
 
-    String highScore = "";
-    float highScoreStringLength = 0;
+    String highScore = "", musicString = "On", soundString = "On";
+    float highScoreStringLength = 0, musicStringLength = 0f, soundStringLength = 0f;
 
     // put it where we can see it :)
     float offsetLeft = GdxGame.GAME_WIDTH / 8, offsetTop = GdxGame.GAME_WIDTH / 8, offsetY = GdxGame.GAME_HEIGHT / 6;
 
 
-    public MenuScreen(GdxGame game) {
+    public OptionsScreen(GdxGame game) {
         this.parentGame = game;
-        if (parentGame.getBackgroundAnimation()==null) {
+        if (parentGame.getBackgroundAnimation() == null) {
             parentGame.setBackgroundAnimation(new BackgroundAnimation(parentGame));
         }
         animation = parentGame.getBackgroundAnimation();
@@ -66,14 +65,17 @@ public class MenuScreen extends ScreenAdapter {
         cam.update();
 
         batch = new SpriteBatch();
-        if (Gdx.app.getPreferences(GdxGame.HIGHSCORE_FILE) != null) {
-            int h = Gdx.app.getPreferences(GdxGame.HIGHSCORE_FILE).getInteger("highscore", 0);
-            if (h > 0) {
-                highScore = "Highscore is " + h + " points";
-            }
+        refreshOptions();
+    }
+
+    private void refreshOptions() {
+        musicString = parentGame.getSoundManager().isMusicOn() ? "ON" : "OFF";
+        soundString = parentGame.getSoundManager().isSoundOn() ? "ON" : "OFF";
+        int h = Gdx.app.getPreferences(GdxGame.HIGHSCORE_FILE).getInteger("highscore", 0);
+        highScore = "";
+        if (h > 0) {
+            highScore = h + " points";
         }
-
-
     }
 
     @Override
@@ -100,13 +102,19 @@ public class MenuScreen extends ScreenAdapter {
         for (int i = 0; i < menuStrings.length; i++) {
             if (i == currentMenuItem && Gdx.input.isPeripheralAvailable(Input.Peripheral.HardwareKeyboard)) {// show color on those with keyboard.
                 menuFont.setColor(132f / 255, 191f / 255, 4f / 255, 1f);
-            }
-            else menuFont.setColor(192f / 255, 131f / 255, 4f / 255, 1f);
+            } else menuFont.setColor(192f / 255, 131f / 255, 4f / 255, 1f);
             menuFont.draw(batch, menuStrings[i], offsetLeft, GdxGame.GAME_HEIGHT - offsetTop - i * offsetY);
         }
+        // music and sound:
+        smallFont.setColor(192f / 255, 131f / 255, 4f / 255, 1f);
+        musicStringLength = smallFont.draw(batch, musicString, GdxGame.GAME_WIDTH - offsetLeft - musicStringLength, GdxGame.GAME_HEIGHT - offsetTop - 0 * offsetY - (menuFont.getLineHeight() / 2 - smallFont.getLineHeight() / 2)).width;
+        soundStringLength = smallFont.draw(batch, soundString, GdxGame.GAME_WIDTH - offsetLeft - soundStringLength, GdxGame.GAME_HEIGHT - offsetTop - 1 * offsetY - (menuFont.getLineHeight() / 2 - smallFont.getLineHeight() / 2)).width;
+
+
+        // highscore
         if (highScore.length() > 1) { // draw highscore if available.
             smallFont.setColor(192f / 255, 131f / 255, 4f / 255, 1f);
-            highScoreStringLength = smallFont.draw(batch, highScore, GdxGame.GAME_WIDTH - offsetLeft - highScoreStringLength, GdxGame.GAME_HEIGHT - offsetTop - 0 * offsetY - (menuFont.getLineHeight()/2 - smallFont.getLineHeight()/2)).width;
+            highScoreStringLength = smallFont.draw(batch, highScore, GdxGame.GAME_WIDTH - offsetLeft - highScoreStringLength, GdxGame.GAME_HEIGHT - offsetTop - 2 * offsetY - (menuFont.getLineHeight() / 2 - smallFont.getLineHeight() / 2)).width;
         }
         batch.end();
     }
@@ -130,7 +138,7 @@ public class MenuScreen extends ScreenAdapter {
             Gdx.app.exit();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
             Gdx.app.exit();
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) { // "Toogle music", "Toggle sound", "Delete highscore",
             menuCommand(currentMenuItem);
         }
         // touch
@@ -150,20 +158,17 @@ public class MenuScreen extends ScreenAdapter {
     }
 
     private void menuCommand(int index) {
-        if (menuStrings[index].equals("Exit")) {
-            Gdx.app.exit();
-            parentGame.getSoundManager().playEvent("explode");
-        } else if (menuStrings[index].equals("Play")) {
-            parentGame.getScreenManager().setCurrentState(ScreenManager.ScreenState.Game);
-            DodgeDotGameModel.twoPlayerMode = false;
-        } else if (menuStrings[index].equals("Battle")) {
-            parentGame.getScreenManager().setCurrentState(ScreenManager.ScreenState.Game);
-            DodgeDotGameModel.twoPlayerMode = true;
-        } else if (menuStrings[index].equals("Options")) {
-            parentGame.getScreenManager().setCurrentState(ScreenManager.ScreenState.Options);
-        } else if (menuStrings[index].equals("Credits")) {
-            parentGame.getScreenManager().setCurrentState(ScreenManager.ScreenState.Credits);
+        if (menuStrings[index].equals("Back to menu")) {
+            parentGame.getScreenManager().setCurrentState(ScreenManager.ScreenState.Menu);
+        } else if (menuStrings[index].equals("Toogle music")) {
+            parentGame.getSoundManager().toggleMusicOn();
+        } else if (menuStrings[index].equals("Toggle sound")) {
+            parentGame.getSoundManager().toggleSoundOn();
+        } else if (menuStrings[index].equals("Delete highscore")) {
+            Gdx.app.getPreferences(GdxGame.HIGHSCORE_FILE).putInteger("highscore", 0);
+            Gdx.app.getPreferences(GdxGame.HIGHSCORE_FILE).flush();
         }
+        refreshOptions();
     }
 
 

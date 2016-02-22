@@ -7,12 +7,13 @@ import at.juggle.gdx.screens.DodgeDotGameScreen;
 import at.juggle.gdx.screens.GameOverScreen;
 import at.juggle.gdx.screens.LoadingScreen;
 import at.juggle.gdx.screens.MenuScreen;
+import at.juggle.gdx.screens.OptionsScreen;
 
 /**
  * Created by Mathias Lux, mathias@juggle.at, on 04.02.2016.
  */
 public class ScreenManager {
-    public enum ScreenState {Loading, Menu, Game, Credits, Help, GameOver}
+    public enum ScreenState {Loading, Menu, Game, Credits, Help, Options, GameOver}
 
     ;
     private Screen currentScreen;
@@ -43,6 +44,8 @@ public class ScreenManager {
                 parentGame.getSoundManager().startSong("main"); // starts the main theme.
             } else if (state == ScreenState.GameOver) {
                 currentScreen = new GameOverScreen(parentGame);
+            } else if (state == ScreenState.Options) {
+                currentScreen = new OptionsScreen(parentGame);
             } else if (state == ScreenState.Credits) {
                 parentGame.getSoundManager().fadeOut(); // fade out music ...
                 currentScreen = new CreditsScreen(parentGame);

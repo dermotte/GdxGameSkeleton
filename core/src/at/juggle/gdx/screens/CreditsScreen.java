@@ -25,14 +25,22 @@ public class CreditsScreen extends ScreenAdapter {
     Texture backgroundImage, gradientTop, gradientBottom;
     BitmapFont creditsFont;
 
-    String[] credits = ("DodgeDots\nby Mathias Lux\n" +
+    String[] credits = ("DodgeDots\n" +
+            "by Mathias Lux\n" +
+            "mathias@juggle.at\n" +
             "\n" +
-            "All assets are public domain\n" +
-            "Source in Apache 2.0 license\n" +
+            "Graphic and sound assets\n    are public domain\n" +
+            "Game licensed under Apache 2.0 license\n" +
             "\n" +
-            "Implemented with libGDX" +
+            "Implemented with libGDX.\n" +
+            "Special thanks to Mario Zechner!\n" +
             "\n" +
-            "Feel free to adapt.").split("\\n");
+            "Music created with a Novation Circuit.\n" +
+            "Sound created with bfxr.\n" +
+            "\n" +
+            "Homespun font by\n    Aenigma fonts (public domain)\n" +
+            "\n" +
+            "Feel free to adapt!").split("\\n");
     private float moveY;
 
 

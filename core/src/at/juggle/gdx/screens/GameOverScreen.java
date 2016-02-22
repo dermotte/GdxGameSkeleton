@@ -37,6 +37,7 @@ public class GameOverScreen extends ScreenAdapter {
 
     BackgroundAnimation animation;
     Texture backgroundImage;
+    private String gameOverString = "Game Over!";
 
     public GameOverScreen(GdxGame game) {
         this.parentGame = game;
@@ -45,14 +46,19 @@ public class GameOverScreen extends ScreenAdapter {
         font = parentGame.getAssetManager().get("menu/Homespun_112.fnt");
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         // check out the high score:
-        highscore = Gdx.app.getPreferences("highscore");
+        highscore = Gdx.app.getPreferences(GdxGame.HIGHSCORE_FILE);
         highscoreValue = highscore.getInteger("highscore");
         hasBeatenHighscore = DodgeDotGameModel.score > highscore.getInteger("highscore");
         if (hasBeatenHighscore) {
             highscore.putInteger("highscore", (int) DodgeDotGameModel.score);
             highscore.flush();
         }
-        animation = new BackgroundAnimation(game);
+
+        // get background animation.
+        if (parentGame.getBackgroundAnimation() == null) {
+            parentGame.setBackgroundAnimation(new BackgroundAnimation(parentGame));
+        }
+        animation = parentGame.getBackgroundAnimation();
 
         // Create camera that projects the game onto the actual screen size.
         cam = new OrthographicCamera(GdxGame.GAME_WIDTH, GdxGame.GAME_HEIGHT);
@@ -61,6 +67,10 @@ public class GameOverScreen extends ScreenAdapter {
         cam.update();
 
         batch = new SpriteBatch();
+
+        if (DodgeDotGameModel.twoPlayerMode) {
+            gameOverString = ((DodgeDotGameModel.playerWon == 1) ? "Green" : "Purple") + " dot won!";
+        }
     }
 
     @Override
@@ -89,14 +99,20 @@ public class GameOverScreen extends ScreenAdapter {
         if (scoreWidth < 1) {
             font.setColor(0f, 0f, 0f, 0f);
             font.getData().setScale(1f);
-            gameOverWidth = font.draw(batch, "Game Over!", GdxGame.GAME_WIDTH / 8, 2* GdxGame.GAME_HEIGHT / 3 + font.getLineHeight() ).width;
+            gameOverWidth = font.draw(batch, gameOverString, GdxGame.GAME_WIDTH / 8, 2 * GdxGame.GAME_HEIGHT / 3 + font.getLineHeight()).width;
             highscoreWidth = font.draw(batch, highscore, GdxGame.GAME_WIDTH / 8, GdxGame.GAME_HEIGHT / 3 + font.getLineHeight() / 2).width;
             font.getData().setScale(2f);
             scoreWidth = font.draw(batch, score, GdxGame.GAME_WIDTH / 8, GdxGame.GAME_HEIGHT / 2 + font.getLineHeight() / 2).width;
         } else {
             font.getData().setScale(1f);
-            font.setColor(242f / 255, 159f / 255, 5f / 255, 1 - (float) Math.min(1d, (Math.max((showTime - 2) / 5, 0))));
-            font.draw(batch, "Game Over!", GdxGame.GAME_WIDTH / 2 - gameOverWidth / 2, 2 * GdxGame.GAME_HEIGHT / 3 + font.getLineHeight() );
+            if (!DodgeDotGameModel.twoPlayerMode) {
+                font.setColor(242f / 255, 159f / 255, 5f / 255, 1 - (float) Math.min(1d, (Math.max((showTime - 2) / 5, 0))));
+            } else { // 132, 191, 4 green && 142, 4, 191 purple.
+                if (DodgeDotGameModel.playerWon == 1)
+                    font.setColor(132f / 255, 191f / 255, 4f / 255, 1f);
+                else font.setColor(142f / 255, 4f / 255, 191f / 255, 1f);
+            }
+            font.draw(batch, gameOverString, GdxGame.GAME_WIDTH / 2 - gameOverWidth / 2, 2 * GdxGame.GAME_HEIGHT / 3 + font.getLineHeight());
             font.setColor(242f / 255, 159f / 255, 5f / 255, (float) Math.min(1d, (Math.max((showTime - 0.5) / 2, 0))));
             font.draw(batch, highscore, GdxGame.GAME_WIDTH / 2 - highscoreWidth / 2, GdxGame.GAME_HEIGHT / 3 + font.getLineHeight() / 2);
             font.getData().setScale(2f);
