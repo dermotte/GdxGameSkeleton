@@ -68,7 +68,7 @@ public class GameOverScreen extends ScreenAdapter {
 
         batch = new SpriteBatch();
 
-        if (DodgeDotGameModel.twoPlayerMode) {
+        if (DodgeDotGameModel.twoPlayerMode && DodgeDotGameModel.playerWon > 0) {
             gameOverString = ((DodgeDotGameModel.playerWon == 1) ? "Green" : "Purple") + " dot won!";
         }
     }
@@ -105,7 +105,7 @@ public class GameOverScreen extends ScreenAdapter {
             scoreWidth = font.draw(batch, score, GdxGame.GAME_WIDTH / 8, GdxGame.GAME_HEIGHT / 2 + font.getLineHeight() / 2).width;
         } else {
             font.getData().setScale(1f);
-            if (!DodgeDotGameModel.twoPlayerMode) {
+            if (!DodgeDotGameModel.twoPlayerMode || (DodgeDotGameModel.twoPlayerMode && DodgeDotGameModel.playerWon == 0)) {
                 font.setColor(242f / 255, 159f / 255, 5f / 255, 1 - (float) Math.min(1d, (Math.max((showTime - 2) / 5, 0))));
             } else { // 132, 191, 4 green && 142, 4, 191 purple.
                 if (DodgeDotGameModel.playerWon == 1)

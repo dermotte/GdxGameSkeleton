@@ -2,6 +2,7 @@ package at.juggle.gdx.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -20,6 +21,7 @@ import at.juggle.gdx.animation.BackgroundAnimation;
 public class OptionsScreen extends ScreenAdapter {
     private final SpriteBatch batch;
     private final OrthographicCamera cam;
+    private final Preferences highscorePreferences;
     private GdxGame parentGame;
     private BackgroundAnimation animation;
 
@@ -65,13 +67,14 @@ public class OptionsScreen extends ScreenAdapter {
         cam.update();
 
         batch = new SpriteBatch();
+        highscorePreferences = Gdx.app.getPreferences(GdxGame.HIGHSCORE_FILE);
         refreshOptions();
     }
 
     private void refreshOptions() {
         musicString = parentGame.getSoundManager().isMusicOn() ? "ON" : "OFF";
         soundString = parentGame.getSoundManager().isSoundOn() ? "ON" : "OFF";
-        int h = Gdx.app.getPreferences(GdxGame.HIGHSCORE_FILE).getInteger("highscore", 0);
+        int h = highscorePreferences.getInteger("highscore", 0);
         highScore = "";
         if (h > 0) {
             highScore = h + " points";
@@ -165,8 +168,8 @@ public class OptionsScreen extends ScreenAdapter {
         } else if (menuStrings[index].equals("Toggle sound")) {
             parentGame.getSoundManager().toggleSoundOn();
         } else if (menuStrings[index].equals("Delete highscore")) {
-            Gdx.app.getPreferences(GdxGame.HIGHSCORE_FILE).putInteger("highscore", 0);
-            Gdx.app.getPreferences(GdxGame.HIGHSCORE_FILE).flush();
+            highscorePreferences.putInteger("highscore", 0);
+            highscorePreferences.flush();
         }
         refreshOptions();
     }

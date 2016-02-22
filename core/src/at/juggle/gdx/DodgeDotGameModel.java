@@ -97,13 +97,6 @@ public class DodgeDotGameModel implements SoundSync {
         init(parentGame, cam);
     }
 
-    public DodgeDotGameModel(GdxGame parentGame, OrthographicCamera cam, boolean twoPlayerMode) {
-        this.twoPlayerMode = twoPlayerMode;
-        dotXone = 2 * gridX / 3;
-        dotYone = gridY / 3;
-        init(parentGame, cam);
-    }
-
     public void init(GdxGame parentGame, OrthographicCamera cam) {
         mainDot = parentGame.getAssetManager().get("game/dot_green.png", Texture.class);
         battleDot = parentGame.getAssetManager().get("game/dot_purple.png", Texture.class);
@@ -113,42 +106,49 @@ public class DodgeDotGameModel implements SoundSync {
         gamepadTexture = parentGame.getAssetManager().get("game/gamepad_400.png", Texture.class);
         this.parentGame = parentGame;
         parentGame.getSoundManager().setSoundSync(this);
-        score = 0;
         camera = cam;
         parentGame.getAssetManager().load("", ParticleEffect.class);
         xplodeMain = new ParticleEffect();
         xplodeMain.load(Gdx.files.getFileHandle("game/xplode.particle", Files.FileType.Internal), Gdx.files.getFileHandle("game", Files.FileType.Internal));
-        if (twoPlayerMode) {
-            xplodeTwo = new ParticleEffect();
-            xplodeTwo.load(Gdx.files.getFileHandle("game/xplode_two.particle", Files.FileType.Internal), Gdx.files.getFileHandle("game", Files.FileType.Internal));
-        }
+        xplodeTwo = new ParticleEffect();
+        xplodeTwo.load(Gdx.files.getFileHandle("game/xplode_two.particle", Files.FileType.Internal), Gdx.files.getFileHandle("game", Files.FileType.Internal));
 
         gamepadPlayerOne = new DodgeDotsGamepadInput(GdxGame.GAME_WIDTH - gamepadTexture.getWidth() - dotSide * 2, dotSide * 2, gamepadTexture.getWidth(), gamepadTexture.getHeight());
         gamepadPlayerTwo = new DodgeDotsGamepadInput(dotSide * 2, GdxGame.GAME_HEIGHT - gamepadTexture.getHeight() - dotSide * 2, gamepadTexture.getWidth(), gamepadTexture.getHeight());
+
+        if (twoPlayerMode) {
+            dotXone = 2 * gridX / 3;
+            dotYone = gridY / 3;
+        }
+        playerWon = 0;
+        score = 0;
     }
 
     public void compute(float delta) {
         handleInput();
         // check for crash ...
-        if (!gameOver && (bottomTopDots[dotXone][dotYone] > 0 || leftRightDots[dotXone][dotYone] > 0 || topBottomDots[dotXone][dotYone] > 0 || rightLeftDots[dotXone][dotYone] > 0)) {
-            // it's a crash!
-            gameOver = true;
-            gameOverTime = gameTime;
-            parentGame.getSoundManager().playEvent("explode");
-            parentGame.getSoundManager().fadeOut();
-            xplodeMain.start();
-            playerWon = 2;
-        }
+        if (!gameOver) {
+            if (bottomTopDots[dotXone][dotYone] > 0 || leftRightDots[dotXone][dotYone] > 0 || topBottomDots[dotXone][dotYone] > 0 || rightLeftDots[dotXone][dotYone] > 0) {
+                // it's a crash!
+                gameOver = true;
+                gameOverTime = gameTime;
+                parentGame.getSoundManager().playEvent("explode");
+                parentGame.getSoundManager().fadeOut();
+                xplodeMain.start();
+                playerWon = 2;
+            }
 
-        // check for Player two ....
-        if (!gameOver && twoPlayerMode && (bottomTopDots[dotXtwo][dotYtwo] > 0 || leftRightDots[dotXtwo][dotYtwo] > 0 || topBottomDots[dotXtwo][dotYtwo] > 0 || rightLeftDots[dotXtwo][dotYtwo] > 0)) {
-            // it's a crash!
-            gameOver = true;
-            gameOverTime = gameTime;
-            parentGame.getSoundManager().playEvent("explode");
-            parentGame.getSoundManager().fadeOut();
-            xplodeTwo.start();
-            playerWon = 1;
+            // check for Player two ....
+            if (twoPlayerMode && (bottomTopDots[dotXtwo][dotYtwo] > 0 || leftRightDots[dotXtwo][dotYtwo] > 0 || topBottomDots[dotXtwo][dotYtwo] > 0 || rightLeftDots[dotXtwo][dotYtwo] > 0)) {
+                // it's a crash!
+                gameOver = true;
+                gameOverTime = gameTime;
+                parentGame.getSoundManager().playEvent("explode");
+                parentGame.getSoundManager().fadeOut();
+                xplodeTwo.start();
+                if (playerWon == 0) playerWon = 1;
+                else playerWon = 0;
+            }
         }
         // timing:
         gameTime += delta; // new time
