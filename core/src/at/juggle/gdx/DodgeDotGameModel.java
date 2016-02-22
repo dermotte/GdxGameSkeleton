@@ -295,7 +295,7 @@ public class DodgeDotGameModel implements SoundSync {
                         movePlayerOne.x = -1;
                         break;
                     case Right:
-                        movePlayerOne.y = 1;
+                        movePlayerOne.x = 1;
                         break;
                 }
                 if (twoPlayerMode) {
@@ -310,7 +310,7 @@ public class DodgeDotGameModel implements SoundSync {
                             movePlayerTwo.x = -1;
                             break;
                         case Right:
-                            movePlayerTwo.y = 1;
+                            movePlayerTwo.x = 1;
                             break;
                     }
                 }

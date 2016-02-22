@@ -1,6 +1,8 @@
 package at.juggle.gdx.screens;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
@@ -9,6 +11,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
+
+import java.awt.DisplayMode;
 
 import at.juggle.gdx.DodgeDotGameModel;
 import at.juggle.gdx.GdxGame;
@@ -126,6 +130,21 @@ public class MenuScreen extends ScreenAdapter {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
             System.out.println("Previous level in music ...");
             parentGame.getSoundManager().addLevel(-1);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.F10)) {
+            if (Gdx.app.getType() == Application.ApplicationType.WebGL ) {
+                if (!Gdx.graphics.isFullscreen()) {
+                    Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+                } else {
+                    Gdx.graphics.setWindowedMode(1280, 720);
+                }
+            }
+            if (Gdx.app.getType() == Application.ApplicationType.Desktop ) {
+                if (!Gdx.graphics.isFullscreen()) {
+                    Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+                } else {
+                    Gdx.graphics.setWindowedMode(1280, 720);
+                }
+            }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
