@@ -127,7 +127,7 @@ public class DodgeDotGameModel implements SoundSync {
     public void compute(float delta) {
         handleInput();
         if(delta<0.02f)
-            delta = 0.02f
+            delta = 0.02f;
         // check for crash ...
         if (!gameOver) {
             if (bottomTopDots[dotXone][dotYone] > 0 || leftRightDots[dotXone][dotYone] > 0 || topBottomDots[dotXone][dotYone] > 0 || rightLeftDots[dotXone][dotYone] > 0) {
